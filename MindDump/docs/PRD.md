@@ -31,25 +31,16 @@ Individuals who need to quickly capture thoughts, ideas, or information througho
 
 | Feature | Description | User Story |
 |---------|-------------|------------|
-| **View Notes List** | Display all notes as cards with date, title, tags, and preview text | As a user, I can see all my notes in a scrollable list to quickly find what I need |
+| **View Notes List** | Display all notes as glassmorphism cards with title and preview text | As a user, I can see all my notes in a scrollable list to quickly find what I need |
 | **View Note Detail** | Display full note content with title, last modified date, tags, and content | As a user, I can tap a note to see its full content |
-| **Create Note (Manual)** | Create notes via a blank editor with title and content fields | As a user, I can write a new note from scratch |
-| **Create Note (Dialog)** | Create notes via a modal form with title, content, and tag inputs | As a user, I can quickly add a structured note with tags |
-| **Promote Note** | Toggle note "promoted" status via button or swipe gesture | As a user, I can mark important notes for visibility |
-| **Tag-based Filtering** | Filter notes by selecting a tag from a bottom drawer | As a user, I can view only notes with a specific tag |
+| **Create Note (Voice)** | Create notes via voice dictation with automatic transcription | As a user, I can speak my thoughts and have them saved as a note |
+| **Top Navigation Menu** | Access settings and filters via expandable menu from header | As a user, I can access app settings and navigation options |
 
 #### P1 - Voice Input
 
 | Feature | Description | User Story |
 |---------|-------------|------------|
 | **Voice Dictation** | Record voice and create note from transcription | As a user, I can speak my thoughts and have them saved as a note |
-
-#### P2 - Note Prioritization
-
-| Feature | Description | User Story |
-|---------|-------------|------------|
-| **Prioritize Notes (Swipe Cards)** | Tinder-style interface to swipe through notes and assign priority levels | As a user, I can quickly triage my notes by swiping right to prioritize or left to skip |
-| **Priority Levels** | Four-tier priority system (Low, Medium, High, Critical) with visual color coding | As a user, I can see note importance at a glance via color |
 
 #### P3 - Settings & Navigation
 
@@ -89,57 +80,58 @@ The following features are visible in the UI but are **intentionally non-functio
 ### 3.1 Navigation Structure
 
 ```
-Bottom Control Bar
-├── Notes List (Home)
-│   ├── Note Detail
-│   │   └── Note Actions Menu (overlay)
-│   ├── Blank Note Editor
-│   ├── Tags Drawer (bottom sheet)
-│   ├── Action Menu (FAB overlay)
-│   │   ├── Dictate Sheet
-│   │   └── Add Note Dialog
+Notes List (Home)
+├── Note Detail
+│   └── Note Actions Menu (overlay)
+├── Blank Note Editor
+├── Top Navigation Menu (expandable from header)
+│   ├── All Notes
 │   └── Settings
-│
-└── Prioritize Notes View (Swipe Prioritization)
-    └── Settings
+├── Dictate Sheet
+└── Settings
 ```
 
-**Bottom Control Bar:** Fixed navigation bar at bottom with two main pages:
-- Notes (list of all notes)
-- Prioritize (swipe-based prioritization interface)
+**Single-Page Navigation:** The app focuses on a single notes list view with an expandable top menu for navigation to settings and filters.
 
 ### 3.2 Layout Specifications
 
-#### 3.2.0 Bottom Control Bar (Navigation)
-- **Position:** Fixed at bottom of screen above safe area
-- **Height:** 60pt (including padding)
-- **Background:** White with subtle top border
-- **Structure:** Two-tab navigation system
-  - Left tab: "Notes" with list icon
-  - Right tab: "Prioritize" with priority/zap icon
-- **Tab styling:**
-  - Active tab: Black text with bottom border indicator
-  - Inactive tab: Gray text
-  - Hover state: Slight color change on inactive tabs
-- **Navigation behavior:**
-  - Tapping a tab switches to that page
-  - Settings and note detail views overlay on top without hiding control bar
-  - Maintain active tab indicator when navigating within a page (e.g., viewing note detail from Notes tab)
-- **Mobile safe area:** Respects bottom safe area on devices with notch/home indicator
-
 #### 3.2.1 Notes List View
-- **Header:** Title ("All Notes" or selected tag) with dropdown indicator, Search icon, Settings icon
-- **Content:** Vertically scrolling list of note cards with bottom padding (80pt) for FAB and control bar
-- **FAB:** Black circular button (56pt diameter) with Plus icon, bottom-right corner (positioned above control bar)
+- **Background:** Warm beige tone (#F5F3ED - rgb(0.96, 0.95, 0.93))
+- **Header:**
+  - Title "NOTAS" in Alice font (24pt)
+  - Menu button (hamburger icon) on the right that toggles to X when menu is open
+  - Background: Same warm beige as page background
+  - Shadow: Subtle shadow (black 10% opacity, 8pt radius, 0x 4y offset) to separate from content
+- **Top Navigation Menu (Expandable):**
+  - Grows downward from header when menu button is pressed
+  - Contains menu options in Alice font (20pt):
+    - "Todas las notas"
+    - "Configuración"
+  - Each option separated by thin divider line (primary color 10% opacity)
+  - Same beige background as header
+  - Overlay darkens notes below by 10% when open
+  - Notes do not move/reflow when menu expands
+- **Content:** Vertically scrolling list of note cards with glassmorphism styling
+- **FAB:** Black circular button (60pt diameter) with note icon, bottom-right corner (20pt right, 24pt bottom)
 
-#### 3.2.2 Note Card
-- White rounded card (12pt radius)
-- Date label (uppercase, gray, 12pt)
-- Title (semibold, 16pt)
-- Tags (badges, secondary variant)
-- Preview text (gray, 14pt, max 3 lines)
-- Promoted indicator (black circle with arrow-up icon, top-right)
-- Swipeable horizontally to toggle promoted status
+#### 3.2.2 Note Card (Glassmorphism)
+- **Background:** Liquid glass effect
+  - Semi-transparent white (70% opacity)
+  - Ultra-thin material backdrop blur
+  - White border (50% opacity, 1pt width)
+  - Shadow: black 8% opacity, 16pt radius, 0x 4y offset
+  - Rounded corners: 16pt radius
+- **Padding:** 20pt all sides
+- **Top row:**
+  - Bookmark icon (filled, 16pt, primary color) on left
+  - Options menu icon (ellipsis, 16pt, primary color) on right
+- **Title:** Alice font, 16pt, primary color, max 2 lines
+- **Preview text:** System font, 14pt, muted foreground color, max 3 lines
+- **Spacing:** 12pt between elements (vertical)
+- **Animations:**
+  - Press: Scale to 0.98 with spring animation
+  - List entry: Staggered fade-in with scale (0.95 to 1.0), 50ms delay per card
+  - Smooth spring transitions (0.3s response, 0.8 damping)
 
 #### 3.2.3 Note Detail View
 - **Header:** Back button, "All Notes" label, Search icon, Settings icon
@@ -152,7 +144,7 @@ Bottom Control Bar
 - **Content:**
   - Upgrade card (white, rounded, contains "Get Pro" button)
   - Options list (white, rounded, icon + label rows)
-- **Options:** Prioritize Notes, Account, Personalize, Privacy, Terms of Services, About, Feedback, Sign out
+- **Options:** Account, Personalize, Privacy, Terms of Services, About, Feedback, Sign out
 
 #### 3.2.5 Blank Note Editor
 - **Header:** Back button, "New Note" label, Check (save) button
@@ -183,44 +175,31 @@ Bottom Control Bar
 - "All Notes" option at top
 - Selected tag highlighted (black background, white text)
 
-#### 3.2.10 Prioritize View
-- **Header:** Back button (optional - can use control bar to return to Notes), "Prioritize Notes" label, Settings icon
-- **Progress:** Review count and progress bar
-- **Content Area:** Vertically centered with bottom padding (80pt) for control bar
-- **Card:** Large swipeable card showing note details
-  - Background color indicates priority level
-  - Date, title, tags, preview
-- **Swipe Indicators:** "PRIORITIZE" (green) / "IGNORE" (red) labels appear during swipe
-- **Action Buttons:** X (ignore) and Heart (prioritize) circular buttons
-- **Instructions:** Swipe guidance text above bottom control bar
-
 ### 3.3 Color System
 
 | Token | Value | Usage |
 |-------|-------|-------|
 | Primary | `#030213` (near-black) | Primary buttons, FAB, text |
-| Background | `#FFFFFF` | Cards, sheets |
-| Background Secondary | `#F9FAFB` (gray-50) | Screen backgrounds |
+| Background | `#FFFFFF` | Cards, sheets (with glassmorphism overlay) |
+| Background Secondary | `#F5F3ED` (warm beige) | Main screen background |
 | Muted | `#ECECF0` | Secondary backgrounds |
 | Muted Foreground | `#717182` | Secondary text |
 | Border | `rgba(0,0,0,0.1)` | Subtle borders |
 | Destructive | `#D4183D` | Recording state, errors |
 
-#### Priority Colors
-| Level | Background | Description |
-|-------|------------|-------------|
-| None | White | Default, no priority |
-| Low | Light Blue (`blue-200`) | Low priority |
-| Medium | Blue (`blue-500`) | Medium priority |
-| High | Purple (`purple-600`) | High priority |
-| Critical | Black | Critical priority |
-
 ### 3.4 Typography
 
+**Primary Font:** Alice (Google Fonts)
+- Used for: Main headings ("NOTAS"), note titles, menu options
+- Sizes: 24pt (main header), 20pt (menu options), 16pt (note titles)
+
+**System Font:** San Francisco (iOS default)
+- Used for: Body text, preview text, secondary content
 - Base font size: 16px
 - Font weights: Normal (400), Medium (500)
-- Headings: Medium weight
-- Body: Normal weight
+- Body text: 16pt normal weight
+- Caption text: 14pt normal weight
+- Label text: 12pt normal weight
 
 ### 3.5 Iconography
 
@@ -233,22 +212,25 @@ Uses Lucide icon set:
 
 ### 3.6 Animations & Transitions
 
-- Bottom sheets slide in from bottom (300ms)
-- Action menus fade in with slide-up (300ms)
-- Swipe cards follow finger with rotation based on drag distance
-- Opacity decreases as cards are swiped away
-- Spring-back animation when swipe threshold not met
+- **Top menu expansion:** Grows from header with spring animation (0.3s response, 0.8 damping), height animates from 0 to auto
+- **Menu button transition:** Smooth rotation between hamburger and X icon
+- **Note cards:**
+  - Entry: Staggered fade-in with scale effect (0.95 to 1.0), 50ms delay between cards
+  - Press: Scale to 0.98 with spring animation (0.3s response, 0.7 damping)
+  - Removal: Scale and fade out
+- **Dark overlay:** Fades in/out with menu (0.2s ease-in-out) to 10% opacity
+- **Bottom sheets:** Slide in from bottom (300ms spring animation)
+- **FAB:** Smooth shadow and scale transitions on press
 
 ### 3.7 Gestures
 
 | Gesture | Location | Action |
 |---------|----------|--------|
 | Tap | Note card | Open note detail |
-| Horizontal swipe | Note card | Toggle promoted status |
-| Tap | Tag title (header) | Open tags drawer |
+| Tap | Menu button (header) | Toggle top navigation menu |
+| Tap | Top menu option | Navigate and close menu |
 | Tap outside | Overlay/Sheet | Dismiss |
-| Horizontal swipe | Prioritize card | Right = prioritize, Left = ignore |
-| Drag | Prioritize card | Free movement with rotation |
+| Tap | FAB | Open dictate sheet |
 
 ---
 
@@ -371,53 +353,43 @@ The following are observations and potential improvements for future versions, c
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                         MAIN APP                                 │
+│                         NOTES LIST                               │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │                      NOTES LIST                          │   │
-│  │  [Tag Dropdown ▼]         [Search] [Settings]           │   │
+│  │  NOTAS                              [☰] ←── tap ──→ [✕]  │   │
+│  │                                              ↓            │   │
+│  │                              ┌───────────────────────┐   │   │
+│  │                              │ Todas las notas       │   │   │
+│  │                              │ ───────────────────── │   │   │
+│  │                              │ Configuración         │   │   │
+│  │                              └───────────────────────┘   │   │
+│  │                                (TOP NAVIGATION MENU)     │   │
+│  │                                                          │   │
 │  │  ┌────────────────────────────────────────────────────┐ │   │
-│  │  │ Note Card 1  ←── tap ──→ NOTE DETAIL              │ │   │
-│  │  │ Note Card 2                │                       │ │   │
-│  │  │ Note Card 3                ↓                       │ │   │
-│  │  │ ...              [Note Actions Menu]               │ │   │
+│  │  │ [🔖] Glassmorphism Card 1            [⋯]         │ │   │
+│  │  │ Voice note onboarding flow                        │ │   │
+│  │  │ I think the onboarding should be...              │ │   │
+│  │  │                                                    │ │   │
+│  │  │ [🔖] Glassmorphism Card 2            [⋯]         │ │   │
+│  │  │ Monetization ideas                                │ │   │
+│  │  │ So I was thinking about how we...                │ │   │
+│  │  │ ...                                                │ │   │
 │  │  └────────────────────────────────────────────────────┘ │   │
+│  │             │ (tap)                                     │   │
+│  │             ↓                                           │   │
+│  │        NOTE DETAIL ──→ [Note Actions Menu]            │   │
 │  │                                                          │   │
-│  │  [+ FAB] ──→ ACTION MENU                               │   │
-│  │               ├── Dictate ──→ DICTATE SHEET            │   │
-│  │               ├── Write ──→ BLANK NOTE EDITOR          │   │
-│  │               ├── Scan ──→ (placeholder)               │   │
-│  │               └── Transcribe ──→ (same as dictate)     │   │
+│  │  [+ FAB] ──→ DICTATE SHEET                            │   │
 │  │                                                          │   │
-│  │  [Tag Dropdown] ──→ TAGS DRAWER                        │   │
-│  │                                                          │   │
-│  │  [Settings] ──→ SETTINGS VIEW                          │   │
-│  ├──────────────────────────────────────────────────────┤   │
-│  │ [📋 Notes] │ [⚡ Prioritize]  ← BOTTOM CONTROL BAR   │   │
+│  │  [Menu] ──→ SETTINGS VIEW                             │   │
 │  └──────────────────────────────────────────────────────┘   │
-│                                                                  │
-│  ┌──────────────────────────────────────────────────────┐   │   │
-│  │                  PRIORITIZE VIEW                     │   │   │
-│  │  Progress: 1/6  [████░░░░░░]                         │   │   │
-│  │                                                       │   │   │
-│  │           ┌──────────────────────┐                   │   │   │
-│  │           │  Exploration Ideas   │                   │   │   │
-│  │           │  20 APR              │                   │   │   │
-│  │           │  [Design] [Prod.]    │                   │   │   │
-│  │           │  Ticket App, Travel..│                   │   │   │
-│  │           └──────────────────────┘                   │   │   │
-│  │     [✕]              [❤]                            │   │   │
-│  │   Swipe left ← or → Swipe right                     │   │   │
-│  ├──────────────────────────────────────────────────────┤   │   │
-│  │ [📋 Notes] │ [⚡ Prioritize]  ← BOTTOM CONTROL BAR   │   │   │
-│  └──────────────────────────────────────────────────────┘   │   │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Bottom Control Bar Navigation:**
-- Left tab: "Notes" - Navigate to notes list
-- Right tab: "Prioritize" - Navigate to swipe-based prioritization
-- Always visible to enable quick switching between pages
-- Active tab shows with black text and bottom border indicator
+**Navigation Flow:**
+- Single-page app focused on notes list
+- Top menu expands from header for settings and filters
+- FAB opens voice dictation directly
+- Tap cards to view note detail
 
 ---
 
@@ -425,19 +397,17 @@ The following are observations and potential improvements for future versions, c
 
 | Component | Type | Instances |
 |-----------|------|-----------|
-| Bottom Control Bar | Navigation | Global (all main views) |
-| Note Card | List Item | Notes List |
-| Badge | Tag | Note cards, Note detail, Prioritize cards |
+| Header with Expandable Menu | Navigation | Notes List |
+| Glassmorphism Note Card | List Item | Notes List |
+| Top Navigation Menu | Expandable Navigation | Header |
 | FAB | Button | Notes List, Note Detail |
 | Bottom Sheet | Modal | Tags Drawer, Dictate Sheet |
-| Overlay Menu | Modal | Action Menu, Note Actions Menu |
-| Header | Navigation | All views |
-| Text Input | Form | Blank Note Editor, Add Note Dialog |
-| Text Area | Form | Blank Note Editor, Add Note Dialog |
+| Overlay Menu | Modal | Note Actions Menu |
+| Text Input | Form | Blank Note Editor |
+| Text Area | Form | Blank Note Editor |
 | Icon Button | Button | Headers, Cards, Menus |
 | Settings Row | List Item | Settings View |
-| Progress Bar | Indicator | Prioritize View |
-| Swipeable Card | Interactive | Prioritize View |
+| Dark Overlay | Visual Effect | Menu expansion |
 
 ---
 
