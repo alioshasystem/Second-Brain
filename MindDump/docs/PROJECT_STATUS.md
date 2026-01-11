@@ -1,6 +1,6 @@
 # MindDump - Estado del Proyecto
 
-**Última actualización:** 2026-01-06
+**Última actualización:** 2026-01-10
 **Versión PRD:** 0.2
 **Estado Backend:** Mock/Local (SwiftData)
 
@@ -139,7 +139,7 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 
 ---
 
-### 7. Features - Notes (80%)
+### 7. Features - Notes (85%)
 
 **Ubicación:** `Features/Notes/`
 
@@ -149,10 +149,13 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 | `NotesTableViewRepresentable` | ✅ | Lista optimizada con UIKit |
 | `NoteDetailView` | ✅ | Detalle de nota con scroll parallax |
 | `NoteCard` | ✅ | Card de nota en lista |
+| `NoteCreationSheet` | ⚠️ | Sheet de creación con expansión animada (405 líneas - excede límite) |
+| `NoteCreationViewModel` | ✅ | ViewModel de creación con auto-save |
 | `BlankNoteEditorView` | ⚠️ | Editor básico (sin funcionalidad completa) |
 | `NoteActionsMenu` | ✅ | Menú de acciones en nota |
 | `ActionMenu` | ✅ | Menú de acciones genérico |
 | `FoldersDrawer` | ✅ | Drawer de carpetas/filtros |
+| `FloatingActionMenu` | ✅ | Menú flotante de acciones (transcribe, scan, handwrite, dictate) |
 | `NotesViewModel` | ✅ | ViewModel principal de notas |
 
 **Funcionalidades implementadas:**
@@ -162,25 +165,32 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 - ✅ Filtrar por carpeta/concepto
 - ✅ Scroll optimizado con UIKit
 - ✅ Parallax en detalle de nota
-- ⚠️ Crear nota (estructura, sin editor completo)
-- ❌ Editar contenido de nota
+- ✅ Crear nota con animación de expansión
+- ✅ Auto-save durante edición (debounced 500ms)
+- ⚠️ Editar contenido de nota (funciona pero sin UI pulida)
 - ❌ Eliminar nota
 
 ---
 
-### 8. Features - Voice Input (Estructura: 80%, Funcional: 20%)
+### 8. Features - Voice Input (Estructura: 90%, Funcional: 40%)
 
 **Ubicación:** `Features/VoiceInput/`
 
 | Componente | Estado | Propósito |
 |------------|--------|-----------|
-| `DictateSheet` | ⚠️ | Sheet de dictado (UI lista) |
-| `VoiceDictationViewModel` | ⚠️ | ViewModel (sin Speech Framework) |
+| `DictateSheet` | ✅ | Sheet de dictado básico (deprecado) |
+| `DictationNoteCreationSheet` | ✅ | Sheet de dictado con expansión y creación de nota |
+| `FloatingWaveformBar` | ✅ | Barra de visualización de audio con waveform |
+| `VoiceDictationViewModel` | ⚠️ | ViewModel con polling (sin Speech Framework real) |
 
 **Estado:**
-- ✅ UI del sheet de dictado
-- ❌ Speech Framework no integrado
-- ❌ Transcripción no funcional
+- ✅ UI completa con waveform animado
+- ✅ Integración con NoteCreationViewModel
+- ✅ Auto-expansión según contenido
+- ⚠️ Speech Framework estructurado pero no funcional
+- ⚠️ TranscriptionService con protocol pero sin implementación real
+- ❌ Permisos de micrófono no implementados
+- ❌ Audio real no capturado
 
 ---
 
@@ -383,27 +393,57 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 
 ## 🔧 Deuda Técnica y Mejoras
 
-### 1. Testing (0%)
+### 1. Violaciones de Arquitectura (Commits Recientes)
+**Prioridad Alta - Requiere Refactor:**
+
+- ❌ **NoteCreationSheet.swift: 405 líneas** (límite: 350 - GUIDELINES.md:236)
+  - Debe dividirse en componentes más pequeños
+  - Extraer String extension a `Shared/Extensions/`
+
+- ❌ **Código duplicado:** `NoteCreationSheet` y `DictationNoteCreationSheet` comparten ~80% estructura
+  - Extraer lógica común a componente base
+  - Header view duplicado dentro de NoteCreationSheet
+
+- ❌ **Strings hardcodeados** (violación GUIDELINES.md:445-452):
+  - "Untitled Note" (NoteCreationViewModel.swift:102, 133)
+  - "Voice Note" (DictationNoteCreationSheet.swift:255)
+  - "Nueva nota" (DictationNoteCreationSheet.swift:85)
+  - Deben usar NSLocalizedString
+
+- ❌ **Hardcoded design values** (violación GUIDELINES.md:80-98):
+  - Font sizes `16`, `22` en lugar de `Font.DS.*`
+  - `UIScreen.main.bounds` en lugar de GeometryReader
+
+- ❌ **Patrón de concurrencia antiguo:**
+  - `DispatchQueue.main.asyncAfter` (FloatingActionMenu.swift:127)
+  - Debe usar `Task.sleep`
+
+- ❌ **Error handling faltante:**
+  - Async tasks ignoran errores (NoteCreationSheet.swift:196-201, 356-361)
+
+### 2. Testing (0%)
 - No hay tests unitarios
 - No hay tests de integración
 - No hay UI tests
 
-### 2. Error Handling
+### 3. Error Handling
 - Error handling básico en Repositories
 - No hay retry logic en networking
 - No hay offline-first strategy clara
+- Tareas async sin manejo de errores en vistas
 
-### 3. Performance
+### 4. Performance
 - Scroll optimizado con UIKit ✅
 - Imágenes no optimizadas (sin downsampling)
 - No hay paginación en lista de notas
+- Polling en VoiceDictationViewModel (debería usar async streams)
 
-### 4. Accessibility
+### 5. Accessibility
 - No hay soporte VoiceOver
 - No hay Dynamic Type
 - No hay labels de accesibilidad
 
-### 5. Localización
+### 6. Localización
 - Strings hardcodeados en español/inglés
 - No hay `Localizable.strings`
 - No hay soporte multi-idioma
@@ -438,8 +478,11 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 | `FlowLayout` | `Shared/Components/` | Layout fluido |
 | `FAB` | `Shared/Components/` | Floating Action Button |
 | `FloatingActionMenu` | `Shared/Components/` | Menú flotante de acciones |
+| `FloatingWaveformBar` | `Features/VoiceInput/Views/` | Barra de waveform animada (feature-specific) |
 | `NoteCard` | `Features/Notes/Views/` | Card de nota (feature-specific) |
 | `NoteTableViewCell` | `Features/Notes/Views/UIKit/` | Cell optimizada UIKit |
+| `NoteCreationSheet` | `Features/Notes/Views/` | Sheet de creación con expansión (⚠️ 405 líneas) |
+| `DictationNoteCreationSheet` | `Features/VoiceInput/Views/` | Sheet de dictado con expansión |
 
 ### Services Implementados
 
@@ -526,8 +569,8 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 | Repositories | 2/2 | 0 | 0 | 100% |
 | Services | 4/4 | 0 | 0 | 100% |
 | Shared Components | 8/8 | 0 | 0 | 100% |
-| Notes Feature | 8/11 | 1 | 2 | 73% |
-| Voice Input | 0/2 | 2 | 0 | 10% |
+| Notes Feature | 10/13 | 2 | 1 | 77% |
+| Voice Input | 3/5 | 2 | 0 | 60% |
 | Prioritize | 3/3 | 0 | 0 | 100% |
 | Settings | 1/3 | 0 | 2 | 33% |
 | Autenticación | 0/4 | 0 | 4 | 0% |
@@ -539,37 +582,54 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 
 ### Global
 
-- **Total de tareas:** ~85
-- **Completadas:** ~30
-- **En progreso:** ~3
-- **Pendientes:** ~52
-- **Progreso:** ~35%
+- **Total de tareas:** ~90
+- **Completadas:** ~38
+- **En progreso:** ~5
+- **Pendientes:** ~47
+- **Progreso:** ~42%
+
+### ⚠️ Deuda Técnica de Commits Recientes
+- **7 violaciones de arquitectura** requieren refactor
+- **1 archivo excede límite de líneas** (405 vs 350)
+- **Código duplicado significativo** entre sheets de creación
 
 ---
 
 ## 🚀 Siguientes Pasos Inmediatos
 
-1. **Completar Editor de Notas**
-   - Implementar TextEditor funcional
-   - Auto-save
-   - Integrar con NoteService
+### Prioridad 1: Refactor Deuda Técnica (1-2 días)
+1. **Dividir NoteCreationSheet** (405 → <350 líneas)
+   - Extraer String extension a `Shared/Extensions/String+Height.swift`
+   - Extraer componentes: HeaderView, ContentCard
+   - Eliminar código duplicado con DictationNoteCreationSheet
 
-2. **Funcionalidad de Eliminación**
+2. **Localización de strings hardcodeados**
+   - Crear `Localizable.strings`
+   - Reemplazar "Untitled Note", "Voice Note", "Nueva nota"
+
+3. **Usar Design System tokens**
+   - Reemplazar font sizes hardcodeados
+   - Eliminar `UIScreen.main.bounds`
+
+### Prioridad 2: Completar Features Existentes (2-3 días)
+4. **Implementar Speech Framework Real**
+   - Permisos de micrófono
+   - AVAudioEngine para captura
+   - SFSpeechRecognizer para transcripción
+   - Reemplazar polling con async streams
+
+5. **Funcionalidad de Eliminación**
    - Soft delete (cambiar status)
    - Confirmación
    - Undo
 
-3. **Implementar Speech Framework**
-   - Pedir permisos
-   - Transcripción on-device
-   - Crear nota desde voz
-
-4. **Búsqueda Básica**
+### Prioridad 3: Nuevas Features (1-2 semanas)
+6. **Búsqueda Básica**
    - Barra de búsqueda en NotesListView
    - Filtrado en memoria
    - Highlight de resultados
 
-5. **Onboarding/Autenticación**
+7. **Onboarding/Autenticación**
    - Decidir si empezar con autenticación o continuar con features offline
 
 ---
