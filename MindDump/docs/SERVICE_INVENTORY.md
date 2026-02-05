@@ -11,13 +11,7 @@ After implementing a new service or repository, document it here with a concise 
 | **Services** | | |
 | `NoteService` | `Core/Services/` | CRUD de notas en SwiftData (fetch, create, update, delete, priority) |
 | `ConceptService` | `Core/Services/` | Gestión de conceptos y organización jerárquica |
-| `TranscriptionService` | `Core/Services/` | Servicio de transcripción de voz (estructura, sin Speech Framework) |
-| `SampleDataService` | `Core/Services/` | Carga de datos de ejemplo en primera ejecución |
-| **Repositories** | | |
-| `NoteRepository` | `Core/Repositories/` | Abstracción de datos de notas (actualmente SwiftData, listo para migrar a API) |
-| `ConceptRepository` | `Core/Repositories/` | Abstracción de datos de conceptos |
-| `PurposeRepository` | `Core/Repositories/` | Abstracción de datos de intenciones/purposes |
-| `TodoRepository` | `Core/Repositories/` | Abstracción de datos de to-dos |
+| `TranscriptionService` | `Core/Services/` | Servicio de transcripción de voz (Apple Speech Framework) |
 | `PaintingService` | `Core/Services/` | Generación y gestión de pinturas/imágenes |
 | `AuthService` | `Core/Services/` | Autenticación y gestión de sesión |
 | `SearchService` | `Core/Services/` | Búsqueda de notas (text y semantic search) |
@@ -25,6 +19,10 @@ After implementing a new service or repository, document it here with a concise 
 | `ProcessingService` | `Core/Services/` | Procesamiento cognitivo de notas (conceptos, purposes, todos) |
 | `EmbeddingService` | `Core/Services/` | Generación de embeddings semánticos para notas |
 | `StatsService` | `Core/Services/` | Estadísticas y analytics de usuario |
+| **Repositories** | | |
+| `NoteRepository` | `Core/Repositories/` | API - Operaciones CRUD de notas con procesamiento y priorización |
+| `TaskRepository` | `Core/Repositories/` | API - CRUD de tareas extraídas de notas |
+| `NotificationSettingsRepository` | `Core/Repositories/` | API - Gestión de configuración de notificaciones push |
 
 ---
 

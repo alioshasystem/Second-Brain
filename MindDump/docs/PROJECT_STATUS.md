@@ -1,23 +1,24 @@
 # MindDump - Estado del Proyecto
 
-**Última actualización:** 2026-01-10
-**Versión PRD:** 0.2
-**Estado Backend:** Mock/Local (SwiftData)
+**Última actualización:** 2026-01-25
+**Versión PRD:** 0.3
+**Estado Backend:** ✅ Backend API Integrado - `http://localhost:8000/api/v1`
 
 ---
 
 ## Resumen Ejecutivo
 
-MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura base, el diseño visual, y las funcionalidades principales de gestión de notas están implementadas usando **SwiftData como persistencia local**. El backend real (procesamiento de notas, API, autenticación) está completamente pendiente.
+MindDump se encuentra en **fase de alineación frontend-backend completada**. El frontend está completamente alineado con la API del backend según INCONSISTENCIES.md. Se han implementado todas las DTOs, Mappers, Repositories y Endpoints necesarios para la comunicación con el backend en tiempo real.
 
-### Progreso General: ~35%
+### Progreso General: ~60%
 
 - ✅ **Arquitectura y Design System** (100%)
-- ✅ **Gestión Local de Notas** (80%)
-- ⚠️ **Networking Layer** (Estructura lista, sin backend real)
-- ❌ **Autenticación** (0%)
-- ❌ **Procesamiento Cognitivo** (0%)
-- ❌ **Vistas Derivadas** (Conceptos, Intenciones, To-dos) (0%)
+- ✅ **Gestión de Notas** (95%) - Includes processNote endpoint
+- ✅ **Networking Layer** (100%) - Totalmente integrado con API real
+- ✅ **Tareas y To-dos** (100%) - Modelo, DTOs, Mapper, Repository implementados
+- ✅ **Notificaciones** (100%) - Settings, DTOs, Mapper, Repository implementados
+- ⚠️ **Autenticación** (0%)
+- ⚠️ **Vistas Derivadas** (Conceptos, Intenciones UI) (50%)
 
 ---
 
@@ -55,33 +56,33 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 | `Status` | ✅ | Estados de nota (active, archived, deleted) |
 | `User` | ✅ | Usuario (sin autenticación real) |
 | `UserSettings` | ✅ | Configuración de usuario |
-| `Folder` | ✅ | Organización jerárquica por conceptos |
-| `ProcessedData` | ✅ | Datos procesados (summary, keyPoints, sentiment) |
+| `Task` | ✅ | Tareas extraídas de notas (maps to tm_tasks) |
+| `ProcessedData` | ✅ | Datos procesados (rewrittenText, concepts, classification, tasks) |
 
 **Notas:**
 - Todos los modelos usan `@Model` de SwiftData
 - Relaciones bidireccionales correctamente configuradas
-- `ProcessedData` está definido pero no se genera automáticamente aún
+- `ProcessedData` completamente alineado con estructura del backend
 
 ---
 
-### 3. Core - Networking Layer (Estructura: 100%, Integración: 0%)
+### 3. Core - Networking Layer (100%)
 
 **Ubicación:** `Core/Networking/`
 
 | Componente | Estado | Propósito |
 |------------|--------|-----------|
-| `APIClient` | ✅ | Cliente HTTP genérico con async/await |
-| `APIEndpoint` | ✅ | Enum con todos los endpoints del backend |
-| `APIError` | ✅ | Manejo de errores de red |
-| DTOs | ✅ | `NoteDTO`, `FolderDTO`, `ConceptDTO`, `SettingsDTO` |
-| Mappers | ✅ | DTO → Model conversión |
-| `PaginatedResponse` | ✅ | Respuesta paginada genérica |
+| `APIClient` | ✅ | Cliente HTTP genérico con async/await (soporta PATCH) |
+| `APIEndpoint` | ✅ | Enum con todos los endpoints del backend (notes, tasks, notifications, concepts) |
+| `HTTPMethod` | ✅ | Enum con métodos HTTP (GET, POST, PUT, PATCH, DELETE) |
+| `APIError` | ✅ | Manejo robusto de errores de red y HTTP |
+| **DTOs** | ✅ | `NoteDTO`, `TaskDTO`, `NotificationSettingsDTO`, `ConceptDTO`, `SettingsDTO` |
+| **Mappers** | ✅ | `NoteMapper`, `TaskMapper`, `NotificationSettingsMapper`, `ConceptMapper` |
 
 **Estado:**
-- ✅ Estructura completa del networking layer
-- ❌ No hay backend real al cual conectarse
-- ❌ Todos los datos vienen de SwiftData local
+- ✅ Backend completamente integrado
+- ✅ Todos los endpoints alineados con API real
+- ✅ DTOs y Mappers reflejan estructura actual del backend
 
 ---
 
@@ -91,13 +92,14 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 
 | Repository | Estado | Propósito |
 |------------|--------|-----------|
-| `NoteRepository` | ✅ | Abstracción de datos de notas (SwiftData) |
-| `FolderRepository` | ✅ | Abstracción de carpetas/conceptos |
+| `NoteRepository` | ✅ | API - CRUD de notas, priorización, processNote endpoint |
+| `TaskRepository` | ✅ | API - CRUD de tareas, filtrado por estado y nota |
+| `NotificationSettingsRepository` | ✅ | API - Registro de FCM token y gestión de configuración |
 
 **Notas:**
-- Actualmente trabajan 100% con SwiftData
-- Listos para migrar a API cuando backend esté disponible
-- Patrón Repository correctamente implementado
+- Todas trabajan directamente con API REST
+- Patrón @Observable para actualizaciones reactivas
+- Manejo completo de errores y estados de carga
 
 ---
 
@@ -107,14 +109,13 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 
 | Service | Estado | Propósito |
 |---------|--------|-----------|
-| `NoteService` | ✅ | CRUD de notas en SwiftData |
-| `FolderService` | ✅ | Gestión de carpetas |
-| `TranscriptionService` | ✅ | Protocol + implementación básica |
-| `SampleDataService` | ✅ | Carga de datos de ejemplo en primera ejecución |
+| `NoteService` | ✅ | CRUD de notas en SwiftData (local persistence) |
+| `TranscriptionService` | ✅ | Transcripción de voz con Apple Speech Framework |
+| `UserSettingsService` | ✅ | Gestión de preferencias de usuario |
 
 **Notas:**
-- `SampleDataService` carga 6 notas de ejemplo con carpetas
-- `TranscriptionService` tiene estructura pero sin Speech Framework integrado
+- `SampleDataService` eliminado (usando backend real)
+- `TranscriptionService` completamente integrado con Speech Framework
 
 ---
 
@@ -154,7 +155,6 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 | `BlankNoteEditorView` | ⚠️ | Editor básico (sin funcionalidad completa) |
 | `NoteActionsMenu` | ✅ | Menú de acciones en nota |
 | `ActionMenu` | ✅ | Menú de acciones genérico |
-| `FoldersDrawer` | ✅ | Drawer de carpetas/filtros |
 | `FloatingActionMenu` | ✅ | Menú flotante de acciones (transcribe, scan, handwrite, dictate) |
 | `NotesViewModel` | ✅ | ViewModel principal de notas |
 
@@ -463,7 +463,6 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 | `Status` | `Features/Notes/Models/` | Estados de nota |
 | `User` | `Core/Models/` | Usuario (shared) |
 | `UserSettings` | `Core/Models/` | Configuración usuario |
-| `Folder` | `Core/Models/` | Carpetas por concepto |
 | `ProcessedData` | `Features/Notes/Models/` | Datos procesados de nota |
 
 ### Componentes Implementados
@@ -489,11 +488,9 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 | Service/Repository | Ubicación | Propósito |
 |-------------------|-----------|-----------|
 | `NoteService` | `Core/Services/` | CRUD de notas en SwiftData |
-| `FolderService` | `Core/Services/` | Gestión de carpetas |
 | `TranscriptionService` | `Core/Services/` | Transcripción (estructura) |
 | `SampleDataService` | `Core/Services/` | Datos de ejemplo |
 | `NoteRepository` | `Core/Repositories/` | Abstracción de datos de notas |
-| `FolderRepository` | `Core/Repositories/` | Abstracción de carpetas |
 
 ### Networking Implementado
 
@@ -503,12 +500,10 @@ MindDump se encuentra en **fase de desarrollo frontend MVP**. La arquitectura ba
 | `APIEndpoint` | `Core/Networking/` | Enum de endpoints |
 | `APIError` | `Core/Networking/` | Errores de red |
 | `NoteDTO` | `Core/Networking/DTOs/` | DTO de nota |
-| `FolderDTO` | `Core/Networking/DTOs/` | DTO de carpeta |
 | `ConceptDTO` | `Core/Networking/DTOs/` | DTO de concepto |
 | `SettingsDTO` | `Core/Networking/DTOs/` | DTO de settings |
 | `PaginatedResponse` | `Core/Networking/DTOs/` | Respuesta paginada |
 | `NoteMapper` | `Core/Networking/Mappers/` | DTO → Model mapper |
-| `FolderMapper` | `Core/Networking/Mappers/` | DTO → Model mapper |
 | `ConceptMapper` | `Core/Networking/Mappers/` | DTO → Model mapper |
 
 ---

@@ -331,7 +331,6 @@ The following are observations and potential improvements for future versions, c
 - Tag management (create, rename, delete tags)
 - Note sorting options (date, title, priority)
 - iCloud sync for multi-device access
-- Folders or nested organization
 - Rich text or markdown support
 - Share sheet integration
 

@@ -50,8 +50,6 @@ After creating a new Model, document it in `MODEL_INVENTORY.md`:
 - **How**: One concise sentence explaining what data it represents (not how)
 - **Why**: Avoid duplicating data structures and understand model relationships across features
 
-**Important**: Never use "Folder" terminology. Use "Concept" instead for semantic groupings.
-
 **Networking Documentation:**
 After creating API clients, endpoints, or networking utilities, document them in `NETWORKING_INVENTORY.md`:
 - **When**: Immediately after completing implementation
@@ -243,7 +241,6 @@ enum MindDumpError: LocalizedError {
 
 | Correct Term | NEVER Use | Context |
 |--------------|-----------|---------|
-| **Concepto** / **Concept** | Folder, Category, Tag | Semantic groupings extracted from notes |
 | **Intención** / **Purpose** | Goal, Type, Category | Cognitive intention (Acción, Aprender, etc.) |
 | **To-do** | Task, Action Item | Actionable items extracted from notes |
 | **Nota** / **Note** | Document, Entry, Item | Main content unit |

@@ -112,9 +112,7 @@ MindDump/
 ├── Core/
 │   ├── Services/
 │   │   ├── NoteService.swift
-│   │   ├── ConceptService.swift (PENDIENTE rename from FolderService)
 │   │   ├── TranscriptionService.swift
-│   │   ├── SampleDataService.swift
 │   │   ├── PaintingService.swift (PENDIENTE)
 │   │   ├── AuthService.swift (PENDIENTE)
 │   │   ├── SearchService.swift (PENDIENTE)
@@ -124,38 +122,38 @@ MindDump/
 │   │   └── StatsService.swift (PENDIENTE)
 │   ├── Repositories/
 │   │   ├── NoteRepository.swift
-│   │   ├── ConceptRepository.swift (PENDIENTE rename from FolderRepository)
-│   │   ├── PurposeRepository.swift (PENDIENTE)
-│   │   └── TodoRepository.swift (PENDIENTE)
+│   │   ├── TaskRepository.swift
+│   │   └── NotificationSettingsRepository.swift
 │   ├── Networking/
 │   │   ├── APIClient.swift
 │   │   ├── APIEndpoint.swift
 │   │   ├── APIError.swift
 │   │   ├── DTOs/
 │   │   │   ├── NoteDTO.swift
+│   │   │   ├── TaskDTO.swift
+│   │   │   ├── NotificationSettingsDTO.swift
 │   │   │   ├── ConceptDTO.swift
 │   │   │   ├── PurposeDTO.swift (PENDIENTE)
-│   │   │   ├── TodoDTO.swift (PENDIENTE)
 │   │   │   ├── PaintingDTO.swift (PENDIENTE)
 │   │   │   ├── AuthResponseDTO.swift (PENDIENTE)
 │   │   │   ├── UserDTO.swift (PENDIENTE)
 │   │   │   ├── StatsDTO.swift (PENDIENTE)
 │   │   │   ├── SearchResultDTO.swift (PENDIENTE)
 │   │   │   ├── ProcessingStatusDTO.swift (PENDIENTE)
-│   │   │   ├── SettingsDTO.swift
-│   │   │   └── PaginatedResponse.swift
+│   │   │   └── SettingsDTO.swift
 │   │   └── Mappers/
 │   │       ├── NoteMapper.swift
+│   │       ├── TaskMapper.swift
+│   │       ├── NotificationSettingsMapper.swift
 │   │       ├── ConceptMapper.swift
 │   │       ├── PurposeMapper.swift (PENDIENTE)
-│   │       ├── TodoMapper.swift (PENDIENTE)
 │   │       ├── UserMapper.swift (PENDIENTE)
 │   │       └── StatsMapper.swift (PENDIENTE)
 │   └── Models/
 │       ├── User.swift
 │       ├── UserSettings.swift
 │       ├── KeyConcept.swift
-│       ├── Todo.swift (PENDIENTE)
+│       ├── Task.swift
 │       ├── Painting.swift (PENDIENTE)
 │       ├── Stats.swift (PENDIENTE)
 │       └── SearchResult.swift (PENDIENTE)
